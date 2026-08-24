@@ -127,15 +127,15 @@ const LINKS = [
   {
     category: "Форумы",
     items: [
-      { label: "Наш форум", sub: "Клубный форум по альпинизму", href: "https://taganrog-climbing.ru/forum/" },
+      { label: "Наш форум", sub: "Клубный форум по альпинизму", href: "https://taganrog-climbing.ru/forum/", image: "images2/message-svgrepo-com.svg" },
     ],
   },
   {
     category: "Группы в мессенджерах",
     items: [
-      { label: "Группа в Телеграм", sub: "Следите за всей актуальной информацией в Телеграм", href: "https://t.me/TaganrogClimbingClub" },
-      { label: "Группа в Вконтакте", sub: "Следите за всей актуальной информацией в Вконтакте", href: "https://vk.ru/alpclub_tagan" },
-      { label: "Группа в MAX", sub: "Следите за всей актуальной информацией в MAX", href: "https://max.ru/join/uGR1ABVmY81aeiGM7aGAwXCII4l30p3U0801PtJeiqs" },
+      { label: "Группа в Телеграм", sub: "Следите за всей актуальной информацией в Телеграм", href: "https://t.me/TaganrogClimbingClub", image: "images2/telegram-svgrepo-com.svg" },
+      { label: "Группа в Вконтакте", sub: "Следите за всей актуальной информацией в Вконтакте", href: "https://vk.ru/alpclub_tagan", image: "images2/vk-communication-internet-network-chat-interaction-svgrepo-com.svg" },
+      { label: "Группа в MAX", sub: "Следите за всей актуальной информацией в MAX", href: "https://max.ru/join/uGR1ABVmY81aeiGM7aGAwXCII4l30p3U0801PtJeiqs", image: "images2/max-messenger-sign-logo.svg" },
     ],
   },
 ];
@@ -936,10 +936,11 @@ export default function Home() {
                     >
                       <div className="flex-1 min-w-0">
                         <div
-                          className="text-base font-black uppercase group-hover:text-accent transition-colors duration-200 truncate"
+                          className="flex gap-2 text-base font-black uppercase group-hover:text-accent transition-colors duration-200 truncate"
                           style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                         >
                           {link.label}
+                          {link.image != "" ? <img src={link.image} className="h-6 w-6"/> : <div></div>}
                         </div>
                         <div className="text-[11px] text-muted-foreground mt-0.5">{link.sub}</div>
                       </div>
