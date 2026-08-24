@@ -558,6 +558,7 @@ export default function Home() {
                 <span className="hidden sm:inline">{d.day}</span>
                 <span className="sm:hidden">{d.short}</span>
                 {d.closed && <span className="ml-2 text-[9px] text-red-400">Закрыто</span>}
+                {!d.closed && <span className="ml-2 text-[9px] text-green-400">Открыто</span>}
               </button>
             ))}
           </div>
