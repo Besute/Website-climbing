@@ -82,8 +82,9 @@ const SCHEDULE = [
   {
     day: "Вторник",
     short: "ВТ",
-    slots: [],
-    closed: true,
+    slots: [
+      {time: "19:00 - 21:00", label: "Беговая тренировка", level: "Средний"}
+    ],
   },
   {
     day: "Среда",
@@ -95,7 +96,7 @@ const SCHEDULE = [
     day: "Четверг",
     short: "ЧТ",
     slots: [
-      { time: "19:15 - 21:45", label: "Выносливость, сила и техника", level: "Средний" },
+      { time: "19:15 - 21:45", label: "Силовая тренировка", level: "Средний" },
     ],
   },
   {
@@ -114,7 +115,7 @@ const SCHEDULE = [
     day: "Воскресенье",
     short: "ВС",
     slots: [
-      {time: "10:00 - 13:00", label: "Техника", level: "Начинающий"}
+      {time: "10:00 - 13:00", label: "Техническая тренировка", level: "Начинающий"}
     ],
   },
 ];
@@ -164,7 +165,6 @@ export default function Home() {
     Почта: "",
     Текст: "",
     Телефон: "",
-    cc_emails: 'mail@taganrog-climbing.ru'
   });
   const [heroSlide, setHeroSlide] = useState(0);
   const [heroPrev, setHeroPrev] = useState<number | null>(null);
@@ -190,15 +190,20 @@ export default function Home() {
   const currentFolder = lightbox !== null ? galleryFolders[lightbox.folderIdx] : null;
   const currentPhotos = currentFolder?.photos ?? [];
   const currentPhoto = lightbox !== null ? currentPhotos[lightbox.photoIdx] : null;
-
+    
   const sendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        messageData
-      );
+      // const result = await emailjs.send(
+      //   import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      //   import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      //   messageData
+      // );
+      fetch('/forum/sendmail.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(messageData)
+      });
       ym(111509561,'reachGoal','FORM-SUBMIT')
       setMessageData({
         Имя: "",
@@ -206,7 +211,6 @@ export default function Home() {
         Почта: "",
         Текст: "",
         Телефон: "",
-        cc_emails: 'mail@taganrog-climbing.ru'
       })
     } catch (error) {
       console.error('Error sending email:', error);
@@ -588,6 +592,7 @@ export default function Home() {
                     <span
                       className="text-xl font-black uppercase"
                     >
+                      <span className="text-sm font-light">{slot.label ? slot.label : ""}</span>
                       <a href="https://www.taganrog-climbing.ru/forum/viewtopic.php?t=2" className="group flex items-start justify-between gap-6 py-4 border-b border-border hover:border-accent/30 transition-colors duration-200">
                         Подробности можете узнать на форуме <ExternalLink size={20} className="flex-shrink-0 mt-1 text-muted-foreground/40 group-hover:text-accent transition-colors duration-200"></ExternalLink>
                       </a>
