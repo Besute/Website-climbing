@@ -1,6 +1,12 @@
-import { useState, useEffect, useRef, use, useLayoutEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useReducer,
+  useLayoutEffect,
+} from "react";
 import emailjs, { send } from "@emailjs/browser";
-import ErrorMessage from "./../components/ui/errorMessage.tsx"
+import ErrorMessage from "./../components/ui/errorMessage.tsx";
 import {
   Menu,
   X,
@@ -63,10 +69,28 @@ const months = [
   "декабря",
 ];
 
+type InitState = {
+  Имя: string;
+  Фамилия: string;
+  Почта: string;
+  Текст: string;
+  Телефон: string;
+};
+
 type typeImageObject = {
   name: string;
   url: string;
 };
+
+type FormState = {
+  status: "processing" | "success" | "error";
+  message: string;
+};
+
+type FormAction =
+  | { type: "SUBMIT_ERROR"; message: string }
+  | { type: "SUBMIT_SUCCESS" }
+  | { type: "RESET" };
 
 interface Weather {
   wt: string;
@@ -94,6 +118,19 @@ interface GalleryFolder {
 }
 
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+
+const INIT_STATE: InitState = {
+  Имя: "",
+  Фамилия: "",
+  Почта: "",
+  Текст: "",
+  Телефон: "",
+};
+
+const INIT_REDUCER_STATE: FormState = {
+  status: "processing",
+  message: "",
+};
 
 const SCHEDULE = [
   {
@@ -204,18 +241,26 @@ const LINKS = [
 
 function validate_name(name: string) {
   const AUTHORIZIED_CHARS =
-    "qazwsxedcrfvtgbyhnujmikolpQAZWSXEDCRFVTGBYHNUJMIKOLP";
+    "qazwsxedcrfvtgbyhnujmikolpабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+  let is_correct = true;
+  if (name.length == 0) {
+    is_correct = false;
+  }
   for (let char of name) {
-    if (!AUTHORIZIED_CHARS.includes(char)) {
-      return false;
+    if (!AUTHORIZIED_CHARS.includes(char.toLowerCase())) {
+      is_correct = false;
+      return is_correct;
     }
   }
-  return true;
+  return is_correct;
 }
 
 function validate_phone(phone: string) {
   let is_correct = true;
   const DIGITS = "0123456789";
+  if (phone.length == 0) {
+    is_correct = false;
+  }
   if (phone[0] != "+") {
     is_correct = false;
   }
@@ -232,6 +277,9 @@ function validate_phone(phone: string) {
 
 function validate_mail(mail: string) {
   let is_correct = true;
+  if (mail.length == 0) {
+    is_correct = false;
+  }
   const at_index = mail.indexOf("@");
   const dot_index = mail.indexOf(".");
   if (at_index == -1 || dot_index == -1) {
@@ -242,6 +290,28 @@ function validate_mail(mail: string) {
     is_correct = false;
   }
   return is_correct;
+}
+
+function formReducer(state: FormState, action: FormAction): FormState {
+  switch (action.type) {
+    case "SUBMIT_ERROR":
+      return {
+        status: "error",
+        message: action.message,
+      };
+
+    case "SUBMIT_SUCCESS":
+      return {
+        status: "success",
+        message: "Форма успешно отправлена!",
+      };
+
+    case "RESET":
+      return INIT_REDUCER_STATE as FormState;
+
+    default:
+      return state;
+  }
 }
 
 const NAV_LINKS = ["About", "Расписание", "Галерея", "Контакты", "Ссылки"];
@@ -261,17 +331,15 @@ export default function Home() {
     tmp: -1,
   });
   const [openFolder, setOpenFolder] = useState<string | null>(null);
-  const [messageData, setMessageData] = useState({
-    Имя: "",
-    Фамилия: "",
-    Почта: "",
-    Текст: "",
-    Телефон: "",
-  });
+  const [messageData, setMessageData] = useState<InitState>(INIT_STATE);
   const [heroSlide, setHeroSlide] = useState(0);
   const [heroPrev, setHeroPrev] = useState<number | null>(null);
   const [heroFading, setHeroFading] = useState(false);
-  const [formError, setFormError] = useState<boolean>(false);
+
+  const [state, dispatch] = useReducer(
+    formReducer,
+    INIT_REDUCER_STATE as FormState,
+  );
 
   const goToSlide = (idx: number) => {
     if (idx === heroSlide) return;
@@ -297,34 +365,63 @@ export default function Home() {
   const currentPhoto =
     lightbox !== null ? currentPhotos[lightbox.photoIdx] : null;
 
-  const sendEmail = async (e: React.FormEvent) => {
+  const handleSubmit = async function (e: React.FormEvent) {
     e.preventDefault();
+    let error_message = "";
     try {
-      let is_correct = true;
-      is_correct =
-        validate_mail(messageData["Почта"]) &&
-        validate_phone(messageData["Телефон"]) &&
-        validate_name(messageData["Имя"]) &&
-        validate_name(messageData["Фамилия"]);
-      if (!is_correct) {
-        throw new Error("Your fields has incorrect data!");
+      if (!validate_name(messageData["Имя"])) {
+        error_message += "имя";
       }
-      fetch("/forum/sendmail.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(messageData),
+      if (!validate_name(messageData["Фамилия"])) {
+        if (error_message.length > 0) {
+          error_message += ", ";
+        }
+        error_message += "фамилия";
+      }
+      if (!validate_phone(messageData["Телефон"])) {
+        if (error_message.length > 0) {
+          error_message += ", ";
+        }
+        error_message += "номер телефона";
+      }
+      if (!validate_mail(messageData["Почта"])) {
+        if (error_message.length > 0) {
+          error_message += ", ";
+        }
+        error_message += "почта";
+      }
+      if (error_message.length > 0) {
+        error_message = "Эти поля не соответствуют формату: " + error_message
+        dispatch({
+          type: "SUBMIT_ERROR",
+          message: error_message,
+        });
+      } else {
+        const res = await fetch("/forum/sendmail.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(messageData),
+        });
+        if (!res.ok) {
+          throw new Error("Ошибка при отправке формы")
+        }
+        ym(111509561, "reachGoal", "FORM-SUBMIT");
+        setMessageData({
+          Имя: "",
+          Фамилия: "",
+          Почта: "",
+          Текст: "",
+          Телефон: "",
+        });
+        dispatch({
+          type: "SUBMIT_SUCCESS",
+        });
+      }
+    } catch (e) {
+      dispatch({
+        type: "SUBMIT_ERROR",
+        message: `Что-то пошло не так! Данные не отправились: ${e}`,
       });
-      ym(111509561, "reachGoal", "FORM-SUBMIT");
-      setMessageData({
-        Имя: "",
-        Фамилия: "",
-        Почта: "",
-        Текст: "",
-        Телефон: "",
-      });
-    } catch (error) {
-      setFormError(true)
-      console.error("Error sending email:", error);
     }
   };
 
@@ -468,6 +565,24 @@ export default function Home() {
       className="bg-background text-foreground min-h-screen"
       style={{ fontFamily: "'DM Mono', monospace" }}
     >
+      <ErrorMessage
+        isOpen={state.status != "processing" ? true : false}
+        onClose={() => {
+          dispatch({
+            type: "RESET",
+          });
+        }}
+        title={
+          state.status == "success"
+            ? "Форма успешно отправлена!"
+            : "Проверьте введённые данные"
+        }
+        message={
+          state.status == "error"
+            ? `${state.message}`
+            : ""
+        }
+      />
       {/* NAV */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${"bg-background/95 backdrop-blur border-b border-border"}`}
@@ -1062,14 +1177,10 @@ export default function Home() {
             </div>
 
             <form
-              onSubmit={sendEmail}
+              onSubmit={handleSubmit}
               className="flex flex-col gap-5"
               id="Form"
             >
-              <ErrorMessage  isOpen={true}
-              onClose={() => null}
-              title="Проверьте данные"
-              message="Укажите корректный адрес электронной почты и попробуйте ещё раз."/>
               <label className="text-center">
                 Оставьте свои контакты, чтобы мы смогли с вами связаться
               </label>
