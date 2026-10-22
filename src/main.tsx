@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import "./styles/index.css";
 import { MetrikaCounter } from "react-metrika";
 
-// Рендерим приложение с Метрикой
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <MetrikaCounter 
