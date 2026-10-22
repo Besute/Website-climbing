@@ -8,7 +8,10 @@ export default function NotFound() {
     >
       {/* top bar */}
       <header className="border-b border-border px-6 py-4 flex items-center justify-between">
-        <img src="/images2/logo_big_new_noback.png" className="cursor-pointer items-center sm:w-[25%] w-[30%] md:w-[17%] lg:w-[18%] h-fit object-cover object-top bg-transparent" />
+        <img
+          src="/images2/logo_big_new_noback.png"
+          className="cursor-pointer items-center sm:w-[25%] w-[30%] md:w-[17%] lg:w-[18%] h-fit object-cover object-top bg-transparent"
+        />
         <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
           Ошибка 404
         </span>

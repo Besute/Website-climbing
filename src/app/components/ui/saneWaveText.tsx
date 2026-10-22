@@ -1,5 +1,5 @@
 // SineWaveText.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 interface SineWaveTextProps {
   text: string;
@@ -16,8 +16,8 @@ const SineWaveText: React.FC<SineWaveTextProps> = ({
   speed = 1.2,
   waveSpeed = 0.03,
   amplitude = 25,
-  fontSize = 'text-4xl md:text-5xl lg:text-6xl',
-  className = '',
+  fontSize = "text-4xl md:text-5xl lg:text-6xl",
+  className = "",
   rainbow = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,14 +47,14 @@ const SineWaveText: React.FC<SineWaveTextProps> = ({
         setContainerWidth(width);
         const textWidth = textContainerRef.current.offsetWidth;
         setTextWidth(textWidth);
-        
+
         if (!isResetting && scrollPosition < 0) {
           setScrollPosition(-width);
         }
       }
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [isResetting, scrollPosition]);
   useEffect(() => {
     if (textWidth === 0 || containerWidth === 0 || !isInitialized) return;
@@ -63,32 +63,32 @@ const SineWaveText: React.FC<SineWaveTextProps> = ({
     const animate = (timestamp: number) => {
       const delta = Math.min((timestamp - lastTime) / 16, 2);
       lastTime = timestamp;
-      setScrollPosition(prev => {
+      setScrollPosition((prev) => {
         if (isResetting) return prev;
         let newPos = prev + delta * speed;
         const maxScroll = textWidth + 100;
         if (newPos >= maxScroll) {
           setIsResetting(true);
           setIsVisible(false);
-          
+
           setTimeout(() => {
             setScrollPosition(-containerWidth);
             setIsVisible(true);
             setIsResetting(false);
           }, 500);
-          
+
           return prev;
         }
-        
+
         return newPos;
       });
-      setTime(prev => prev + delta * waveSpeed);
+      setTime((prev) => prev + delta * waveSpeed);
       animationId = requestAnimationFrame(animate);
     };
     animationId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationId);
   }, [speed, waveSpeed, textWidth, containerWidth, isResetting, isInitialized]);
-  const letters = text.split('').map((char, index) => ({
+  const letters = text.split("").map((char, index) => ({
     char,
     hue: (index / text.length) * 360,
     index,
@@ -106,17 +106,17 @@ const SineWaveText: React.FC<SineWaveTextProps> = ({
         style={{
           transform: `translateX(${-scrollPosition}px)`,
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 0.5s ease-in-out',
-          willChange: 'transform, opacity',
+          transition: "opacity 0.5s ease-in-out",
+          willChange: "transform, opacity",
         }}
       >
         {letters.map(({ char, hue, index }, arrayIndex) => {
           const phase = (index / text.length) * 2 * Math.PI * 3;
           const yOffset = Math.sin(time * 2 + phase) * amplitude;
 
-          const color = rainbow 
+          const color = rainbow
             ? `hsl(${hue + time * 50}, 100%, 55%)`
-            : 'white';
+            : "white";
 
           return (
             <span
@@ -125,12 +125,12 @@ const SineWaveText: React.FC<SineWaveTextProps> = ({
               style={{
                 transform: `translateY(${yOffset}px)`,
                 color: color,
-                padding: '0 2px',
-                userSelect: 'none',
-                willChange: 'transform',
+                padding: "0 2px",
+                userSelect: "none",
+                willChange: "transform",
               }}
             >
-              {char === ' ' ? '\u00A0' : char}
+              {char === " " ? "\u00A0" : char}
             </span>
           );
         })}

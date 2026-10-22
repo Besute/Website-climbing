@@ -6,10 +6,10 @@ import { MetrikaCounter } from "react-metrika";
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <MetrikaCounter 
-      id={111509561} 
-      options={{ trackHash: true, webvisor: true }} 
+    <MetrikaCounter
+      id={111509561}
+      options={{ trackHash: true, webvisor: true }}
     />
     <App />
-  </BrowserRouter>
+  </BrowserRouter>,
 );
