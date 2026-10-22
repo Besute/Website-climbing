@@ -71,7 +71,7 @@ export default function ErrorMessage({
               type="button"
               onClick={onClose}
               aria-label="Закрыть предупреждение"
-              className="rounded-lg p-2 text-accent-foreground transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+              className="rounded-lg p-2 text-accent-foreground transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +107,7 @@ export default function ErrorMessage({
             type="button"
             onClick={onClose}
             autoFocus
-            className="mt-7 w-full rounded-xl bg-accent px-5 py-3.5 text-sm font-extrabold uppercase tracking-wide text-accent-foreground transition hover:bg-accent/70 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#171717]"
+            className="mt-7 w-full rounded-xl bg-accent px-5 py-3.5 text-sm font-extrabold uppercase tracking-wide text-accent-foreground transition hover:bg-accent/70 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/75 focus-visible:ring-offset-2 focus-visible:ring-offset-[#171717]"
           >
             Понятно
           </button>
