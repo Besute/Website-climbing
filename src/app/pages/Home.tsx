@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, use, useLayoutEffect } from "react";
 import emailjs, { send } from "@emailjs/browser";
+import ErrorMessage from "./../components/ui/errorMessage.tsx"
 import {
   Menu,
   X,
@@ -1065,6 +1066,10 @@ export default function Home() {
               className="flex flex-col gap-5"
               id="Form"
             >
+              <ErrorMessage  isOpen={true}
+              onClose={() => null}
+              title="Проверьте данные"
+              message="Укажите корректный адрес электронной почты и попробуйте ещё раз."/>
               <label className="text-center">
                 Оставьте свои контакты, чтобы мы смогли с вами связаться
               </label>
