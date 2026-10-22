@@ -212,8 +212,35 @@ function validate_name(name: string) {
   return true;
 }
 
-function validate_phone(name: string) {
+function validate_phone(phone: string) {
   let is_correct = true;
+  const DIGITS = "0123456789";
+  if (phone[0] != "+") {
+    is_correct = false;
+  }
+  for (let i = 1; i < phone.length; ++i) {
+    if (!DIGITS.includes(phone[i])) {
+      is_correct = false;
+    }
+  }
+  if (phone.length != 12) {
+    is_correct = false;
+  }
+  return is_correct;
+}
+
+function validate_mail(mail: string) {
+  let is_correct = true;
+  const at_index = mail.indexOf("@");
+  const dot_index = mail.indexOf(".");
+  if (at_index == -1 || dot_index == -1) {
+    is_correct = false;
+  }
+  // aqdad@.com
+  if (!(dot_index - at_index > 1)) {
+    is_correct = false;
+  }
+  return is_correct;
 }
 
 const NAV_LINKS = ["About", "Расписание", "Галерея", "Контакты", "Ссылки"];
@@ -243,6 +270,7 @@ export default function Home() {
   const [heroSlide, setHeroSlide] = useState(0);
   const [heroPrev, setHeroPrev] = useState<number | null>(null);
   const [heroFading, setHeroFading] = useState(false);
+  const [formError, setFormError] = useState<boolean>(false);
 
   const goToSlide = (idx: number) => {
     if (idx === heroSlide) return;
@@ -271,11 +299,15 @@ export default function Home() {
   const sendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const result = await emailjs.send(
-      //   import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      //   import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      //   messageData
-      // );
+      let is_correct = true;
+      is_correct =
+        validate_mail(messageData["Почта"]) &&
+        validate_phone(messageData["Телефон"]) &&
+        validate_name(messageData["Имя"]) &&
+        validate_name(messageData["Фамилия"]);
+      if (!is_correct) {
+        throw new Error("Your fields has incorrect data!");
+      }
       fetch("/forum/sendmail.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -290,6 +322,7 @@ export default function Home() {
         Телефон: "",
       });
     } catch (error) {
+      setFormError(true)
       console.error("Error sending email:", error);
     }
   };
