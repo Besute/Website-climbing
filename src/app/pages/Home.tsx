@@ -592,7 +592,7 @@ export default function Home() {
             loading="lazy"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             src="/images2/logo_big_new_noback.png"
-            className="cursor-pointer items-center sm:w-[25%] w-[30%] md:w-[17%] lg:w-[18%] h-fit object-cover object-top bg-transparent"
+            className="h-10 w-auto max-w-[30%] cursor-pointer object-contain bg-transparent"
           ></img>
           {/* <span
             className="text-sm font-medium tracking-[0.2em] uppercase cursor-pointer items-center text-center"
