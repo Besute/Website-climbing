@@ -22,37 +22,37 @@ import SineWaveText from "./../components/ui/saneWaveText.tsx";
 
 const HERO_SLIDES = [
   {
-    url: "/images2/1.jpg",
+    url: `${import.meta.env.BASE_URL}images2/1.jpg`,
     alt: "",
     location: "",
   },
   {
-    url: "/images2/2.jpg",
+    url: `${import.meta.env.BASE_URL}images2/2.jpg`,
     alt: "",
     location: "",
   },
   {
-    url: "/images2/3.jpg",
+    url: `${import.meta.env.BASE_URL}images2/3.jpg`,
     alt: "",
     location: "",
   },
   {
-    url: "/images2/4.jpg",
+    url: `${import.meta.env.BASE_URL}images2/4.jpg`,
     alt: "",
     location: "",
   },
   {
-    url: "/images2/5.jpg",
+    url: `${import.meta.env.BASE_URL}images2/5.jpg`,
     alt: "",
     location: "",
   },
   {
-    url: "/images2/6.jpg",
+    url: `${import.meta.env.BASE_URL}images2/6.jpg`,
     alt: "",
     location: "",
   },
 ];
-const ABOUT_IMG = "/images2/photo_2025-11-01_18-30-21.jpg";
+const ABOUT_IMG = `${import.meta.env.BASE_URL}images2/photo_2025-11-01_18-30-21.jpg`;
 
 const months = [
   "января",
@@ -591,7 +591,7 @@ export default function Home() {
           <img
             loading="lazy"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            src="/images2/logo_big_new_noback.png"
+            src={`${import.meta.env.BASE_URL}images2/logo_big_new_noback.png`}
             className="h-10 w-auto max-w-[30%] cursor-pointer object-contain bg-transparent"
           ></img>
           {/* <span

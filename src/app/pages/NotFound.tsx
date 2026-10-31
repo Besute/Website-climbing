@@ -9,7 +9,7 @@ export default function NotFound() {
       {/* top bar */}
       <header className="border-b border-border px-6 py-4 flex items-center justify-between">
         <img
-          src="/images2/logo_big_new_noback.png"
+          src={`${import.meta.env.BASE_URL}images2/logo_big_new_noback.png`}
           className="cursor-pointer items-center sm:w-[25%] w-[30%] md:w-[17%] lg:w-[18%] h-fit object-cover object-top bg-transparent"
         />
         <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
@@ -51,7 +51,7 @@ export default function NotFound() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="/"
+              href={import.meta.env.BASE_URL}
               className="flex items-center gap-3 text-sm tracking-[0.15em] uppercase px-6 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-200"
             >
               Вернуться назад <ArrowUpRight size={15} />
